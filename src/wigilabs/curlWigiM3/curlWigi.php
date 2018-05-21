@@ -12,7 +12,7 @@ class curlWigi
         return 'Hallo!';
     }
 
-    public function post()
+    public function post($reqXML,$serviceUrl)
     {
         return 'Este es el Post';
     }
