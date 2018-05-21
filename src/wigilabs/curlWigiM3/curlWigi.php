@@ -7,7 +7,7 @@ namespace wigilabs\curlWigiM3;
  */
 class curlWigi
 {
-    public function curl()
+    public function get()
     {
         return 'Hallo!';
     }
