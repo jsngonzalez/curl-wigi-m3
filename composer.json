@@ -1,8 +1,8 @@
 {
-    "name": "weaverryan/derp-dangerzone",
+    "name": "wigilabs/curlWigiM3",
     "autoload": {
         "psr-0" : {
-            "Weaverryan\\DangerZone" : "src"
+            "wigilabs\\curlWigiM3" : "src"
         }
     }
 }
