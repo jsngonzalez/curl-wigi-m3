@@ -73,7 +73,8 @@ class curlWigi
         $final = strftime('%T', mktime(0, 0, $sec)) . str_replace('0.', '.', sprintf('%.4f', $micro));
         $secs = $final;
         $tiempo=$this->timeToSeconds($secs);
-
+		$response["secs"]=$secs;
+		$response["tiempo"]=$tiempo;
 
         if(!$res) {
         	$response["response"] = $this->txt_error;
