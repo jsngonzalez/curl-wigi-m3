@@ -1,5 +1,6 @@
 {
     "name": "wigilabs/curlWigiM3",
+    "version": "0.0.1",
     "autoload": {
         "psr-0" : {
             "wigilabs\\curlWigiM3" : "src"
