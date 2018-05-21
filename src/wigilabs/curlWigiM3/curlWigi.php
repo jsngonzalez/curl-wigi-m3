@@ -11,4 +11,9 @@ class curlWigi
     {
         return 'Hallo!';
     }
+
+    public function post()
+    {
+        return 'Este es el Post';
+    }
 }
