@@ -8,16 +8,16 @@ namespace wigilabs\curlWigiM3;
 class curlWigi
 {
 
-	public $CURLOPT_URL = "";
-	public $CURLOPT_CONNECTTIMEOUT = 30;
-	public $CURLOPT_TIMEOUT = 30;
-	public $CURLOPT_RETURNTRANSFER = true;
-	public $CURLOPT_SSL_VERIFYPEER = false;
-	public $CURLOPT_SSL_VERIFYHOST = false;
-	public $CURLOPT_POST = true;
-	public $CURLOPT_POSTFIELDS = "";
-	public $CURLOPT_HTTPHEADER = array();
-	public $headers = array();
+	public $URL = "";
+	public $CONNECTTIMEOUT = 30;
+	public $TIMEOUT = 30;
+	public $RETURNTRANSFER = true;
+	public $SSL_VERIFYPEER = false;
+	public $SSL_VERIFYHOST = false;
+	public $POST = true;
+	public $POSTFIELDS = "";
+	public $HTTPHEADER = array();
+	public $HEADERS = array();
 
 
 	private $txt_error="En este momento no podemos atender esta solicitud, intenta nuevamente.";
@@ -27,26 +27,26 @@ class curlWigi
 	}
 
 
-    public function soap($headerRequest=array())
+    public function soap($headerRequest=array(),$debug=false)
     {
-		$this->headers = array(
+		$this->HEADERS = array(
 	        "Content-type: text/xml;charset=\"utf-8\"",
 	        "Accept: text/xml",
 	        "Cache-Control: no-cache",
 	        "Pragma: no-cache",
-            "Content-length: ".strlen($reqXML)
+            "Content-length: ".strlen($this->POSTFIELDS)
 	    );
 
 		if (count($headerRequest)>0){
 			foreach ($headerRequest as $key) {
-				$this->headers[]=$key;
+				$this->HEADERS[]=$key;
 			}
         }else{
-            $this->headers[]="SOAPAction: \"run\"";
+            $this->HEADERS[]="SOAPAction: \"run\"";
         }
+        
 
-
-        if ($this->CURLOPT_URL=="") {
+        if ($this->URL=="") {
         	$response["response"] = "No se encontró el EndPoint de este servicio.";
             $response["error"] = 1;
             return $response;
@@ -56,18 +56,18 @@ class curlWigi
         $starttime = microtime(true);
 
         $soap_do = curl_init();
-        curl_setopt($soap_do, CURLOPT_URL,$this->CURLOPT_URL);
-        curl_setopt($soap_do, CURLOPT_CONNECTTIMEOUT, $this->CURLOPT_CONNECTTIMEOUT);
-        curl_setopt($soap_do, CURLOPT_TIMEOUT,        $this->CURLOPT_TIMEOUT);
-        curl_setopt($soap_do, CURLOPT_RETURNTRANSFER, $this->CURLOPT_RETURNTRANSFER );
-        curl_setopt($soap_do, CURLOPT_SSL_VERIFYPEER, $this->CURLOPT_SSL_VERIFYPEER);
-        curl_setopt($soap_do, CURLOPT_SSL_VERIFYHOST, $this->CURLOPT_SSL_VERIFYHOST);
-        curl_setopt($soap_do, CURLOPT_POST,           $this->CURLOPT_POST );
-        curl_setopt($soap_do, CURLOPT_POSTFIELDS,     $this->CURLOPT_POSTFIELDS);
-        curl_setopt($soap_do, CURLOPT_HTTPHEADER,     $this->headers);
+        curl_setopt($soap_do, CURLOPT_URL,$this->URL);
+        curl_setopt($soap_do, CURLOPT_CONNECTTIMEOUT, $this->CONNECTTIMEOUT);
+        curl_setopt($soap_do, CURLOPT_TIMEOUT,        $this->TIMEOUT);
+        curl_setopt($soap_do, CURLOPT_RETURNTRANSFER, $this->RETURNTRANSFER );
+        curl_setopt($soap_do, CURLOPT_SSL_VERIFYPEER, $this->SSL_VERIFYPEER);
+        curl_setopt($soap_do, CURLOPT_SSL_VERIFYHOST, $this->SSL_VERIFYHOST);
+        curl_setopt($soap_do, CURLOPT_POST,           $this->POST );
+        curl_setopt($soap_do, CURLOPT_POSTFIELDS,     $this->POSTFIELDS);
+        curl_setopt($soap_do, CURLOPT_HTTPHEADER,     $this->HEADERS);
         $res = curl_exec($soap_do);
 
-        $now = new DateTime();
+
         $diff = microtime(true) - $starttime;
         $sec = intval($diff);
         $final = strftime('%T', mktime(0, 0, $sec)) . str_replace('0.', '.', sprintf('%.4f', $micro));
@@ -77,6 +77,12 @@ class curlWigi
 		$response["tiempo"]=$tiempo;
 
         if(!$res) {
+            if ($debug) {
+                $res = 'Error: ' . curl_error($soap_do);
+                $response["Exception"]=$res;
+            }
+            
+            curl_close($soap_do);
         	$response["response"] = $this->txt_error;
             $response["error"] = 1;
             return $response;
@@ -93,7 +99,7 @@ class curlWigi
 
         try {
             libxml_use_internal_errors(true);
-            $xml = new SimpleXMLElement($res);
+            $xml = new \SimpleXMLElement($res);
         } catch (Exception $e) {
             
         	$response["response"] = $this->txt_error;
