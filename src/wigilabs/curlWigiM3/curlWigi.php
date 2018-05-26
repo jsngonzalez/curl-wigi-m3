@@ -70,6 +70,7 @@ class curlWigi
 
         $diff = microtime(true) - $starttime;
         $sec = intval($diff);
+        $micro = $diff - $sec;
         $final = strftime('%T', mktime(0, 0, $sec)) . str_replace('0.', '.', sprintf('%.4f', $micro));
         $secs = $final;
         $tiempo=$this->timeToSeconds($secs);
