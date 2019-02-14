@@ -108,6 +108,8 @@ class curlWigi
             return $response;
         } else {
             curl_close($soap_do);
+            $res= str_replace("soap-env", "soapenv", $res);
+            $res= str_replace("SOAP-ENV", "soapenv", $res);
             $res = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $res);
 
             $res = str_replace(" xmlns=\"http://services.cmPoller.sisges.telmex.com.co\"", "", $res);
@@ -152,7 +154,7 @@ class curlWigi
             
             if (isset($xml->SBody->ns0Fault->faultcode) && $xml->SBody->ns0Fault->faultcode=="ERROR") {
 
-                $response["response"] = $this->txt_error;
+                $response["response"] = (isset($xml->SBody->ns0Fault->detail))?$xml->SBody->ns0Fault->detail:$this->txt_error;
                 $response["error"] = 1;
                 return $response;
             }
@@ -208,6 +210,8 @@ class curlWigi
             $body = $xml->SBody;
         }else if(isset($xml->Body)){
             $body = $xml->Body;
+        }else if(isset($xml->soapBody)){
+            $body = $xml->soapBody;
         }
 
         if(isset($body)){
