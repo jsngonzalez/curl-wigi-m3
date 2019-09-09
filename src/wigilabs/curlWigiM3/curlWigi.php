@@ -212,6 +212,8 @@ class curlWigi
             $body = $xml->Body;
         }else if(isset($xml->soapBody)){
             $body = $xml->soapBody;
+        }else if(isset($xml->soapenv1Body)){
+            $body = $xml->soapenv1Body;
         }
 
         if(isset($body)){
