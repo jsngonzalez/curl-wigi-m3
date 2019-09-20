@@ -117,8 +117,6 @@ class curlWigi
             $res = str_replace(" xmlns=\"Claro.SelfCareManagement.Services.Entities.Contracts\"", "", $res);
             $res = str_replace(" xmlns=\"Claro.SelfCareManagement.Services.Exception.Contracts\"", "", $res);
 
-
-            
             $res = str_replace("<![CDATA[", "", $res);
             $res = str_replace("]]>", "", $res);
         }
